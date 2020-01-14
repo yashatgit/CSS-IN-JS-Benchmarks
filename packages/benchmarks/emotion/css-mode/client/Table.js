@@ -1,27 +1,19 @@
-import React from 'react';
-import styled, { css } from 'react-emotion';
-
-const tableClass = css`
-  display: table;
-  margin-top: 10px;
-`;
-
-const rowClass = css`
-  display: table-row;
-`;
-
-const cellClass = css`
-  display: table-cell;
-  padding: 10px;
-`;
+/** @jsx jsx */
+import React from "react";
+import { jsx } from "@emotion/core";
 
 const Table = ({ table, toPercent }) => (
-  <div className={tableClass}>
+  <div
+    css={{
+      display: "table",
+      marginTop: "10px"
+    }}
+  >
     {table.map((row, i) => (
-      <div className={rowClass} key={i}>
+      <div css={{ display: "table-row" }} key={i}>
         {row.map((x, j) => (
           <div
-            className={cellClass}
+            css={{ display: "table-cell", padding: "10px" }}
             key={`${i}${j}`}
             style={{ background: `rgba(74, 174, 53, ${x})` }}
           >

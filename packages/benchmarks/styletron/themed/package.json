@@ -1,0 +1,23 @@
+{
+  "name": "table-styltron-themed-big-table",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "devServer --package styletron/themed",
+    "build": "devBuild --package styletron/themed"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "benchmarks-utils": "1.0.0",
+    "styletron-client": "3.0.4",
+    "styletron-engine-atomic": "^1.4.4",
+    "styletron-react": "5.2.6"
+  },
+  "devDependencies": {
+    "dev-tasks": "1.0.0"
+  },
+  "benchmarks": {
+    "name": "styletron-themed",
+    "useCSS": false,
+    "link": "https://github.com/rtsao/styletron"
+  }
+}

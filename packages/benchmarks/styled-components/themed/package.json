@@ -1,10 +1,10 @@
 {
-  "name": "table-styled-components-big-table-v2-plugin-simple",
+  "name": "table-styled-components-big-table-v2-themed",
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "devServer --package styled-components/simple",
-    "build": "devBuild --package styled-components/simple"
+    "start": "devServer --package styled-components/themed",
+    "build": "devBuild --package styled-components/themed"
   },
   "license": "MIT",
   "devDependencies": {
@@ -16,8 +16,9 @@
     "styled-components": "^5.0.0"
   },
   "benchmarks": {
-    "name": "styled-components",
+    "name": "styled-components-themed",
     "link": "https://github.com/styled-components/styled-components/tree/v2",
-    "useCSS": true
+    "useInlineStyles": true,
+    "useCSS": false
   }
 }
