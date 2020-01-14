@@ -75,7 +75,7 @@ async function runTestCase(url) {
 
   let butch = true;
 
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < 5; i++) {
     try {
       const currentRes = await launchChromeAndRunLighthouse(
         `${url}&butch=${butch}`,
