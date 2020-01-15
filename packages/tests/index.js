@@ -21,7 +21,8 @@ run();
 function launchChromeAndRunLighthouse(url, flags, config) {
   return ChromeLauncher.launch({
     port: 9222,
-    autoSelectChrome: true
+    autoSelectChrome: true,
+    chromeFlags: ["--headless"]
   }).then(chrome => {
     flags.port = chrome.port;
     return Lighthouse(url, flags, config).then(results =>
@@ -75,7 +76,7 @@ async function runTestCase(url) {
 
   let butch = true;
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 2; i++) {
     try {
       const currentRes = await launchChromeAndRunLighthouse(
         `${url}&butch=${butch}`,

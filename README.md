@@ -6,6 +6,7 @@ This fork is a updated version of the parent project with following changes:
   - Styled Components v5
   - Styletron 5.2.6
   - Emotion 10
+  - React 16.10
 
 ## Big Table
 
