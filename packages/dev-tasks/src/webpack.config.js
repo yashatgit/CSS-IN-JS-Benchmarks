@@ -1,7 +1,7 @@
 const webpack = require('webpack');
 const path = require('path');
 const chalk = require('chalk');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const { argv } = require('yargs');
 const packageName = argv.package;
@@ -29,47 +29,20 @@ console.log(
 );
 
 const plugins = [
-  new webpack.optimize.CommonsChunkPlugin({
-    name: 'vendor',
-    minChunks: Infinity,
-    filename: 'vendor.bundle.js',
-  }),
+  new MiniCssExtractPlugin(),
   new webpack.EnvironmentPlugin({
     NODE_ENV: process.NODE_ENV,
   }),
   new webpack.NamedModulesPlugin(),
 ];
 
-if (isProd) {
-  plugins.push(
-    new webpack.LoaderOptionsPlugin({
-      minimize: true,
-      debug: false,
-    }),
-    new ExtractTextPlugin('styles.css'),
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false,
-        screw_ie8: true,
-        conditionals: true,
-        unused: true,
-        comparisons: true,
-        sequences: true,
-        dead_code: true,
-        evaluate: true,
-        if_return: true,
-        join_vars: true,
-      },
-      output: {
-        comments: false,
-      },
-    })
-  );
-} else {
+if (!isProd) {
   plugins.push(new webpack.HotModuleReplacementPlugin());
 }
 
 module.exports = {
+  target: 'web',
+  mode: isProd ? 'production' : 'development',
   devtool: isProd ? 'source-map' : 'eval',
   context: sourcePath,
   entry: {
@@ -86,7 +59,7 @@ module.exports = {
         test: /\.html$/,
         exclude: /node_modules/,
         use: {
-          loader: 'file-loader',
+          loader: require.resolve('file-loader'),
           query: {
             name: '[name].[ext]',
           },
@@ -96,23 +69,12 @@ module.exports = {
         test: /\.(js|jsx)$/,
         include: sourcePath,
         exclude: /node_modules/,
-        use: ['babel-loader'],
+        use: [require.resolve('babel-loader')],
       },
       {
         test: /\.css$/,
         exclude: /node_modules/,
-        use: isProd
-          ? ExtractTextPlugin.extract({
-              fallback: 'style-loader',
-              use: { loader: 'css-loader', options: { sourceMap: true } },
-            })
-          : [
-              'style-loader',
-              {
-                loader: 'css-loader',
-                options: { sourceMap: true },
-              },
-            ],
+        use: [MiniCssExtractPlugin.loader, require.resolve('css-loader')],
       },
     ],
   },
@@ -141,11 +103,11 @@ module.exports = {
 
   plugins,
 
-  performance: isProd && {
-    maxAssetSize: 100,
-    maxEntrypointSize: 300,
-    hints: 'warning',
-  },
+  // performance: isProd && {
+  //   maxAssetSize: 100,
+  //   maxEntrypointSize: 300,
+  //   hints: 'warning',
+  // },
 
   stats: {
     colors: {

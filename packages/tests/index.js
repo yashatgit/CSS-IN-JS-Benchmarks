@@ -1,18 +1,18 @@
-const connect = require("connect");
-const serveStatic = require("serve-static");
+const connect = require('connect');
+const serveStatic = require('serve-static');
 
-const shell = require("shelljs");
-const chalk = require("chalk");
+const shell = require('shelljs');
+const chalk = require('chalk');
 
-const http = require("http");
-const path = require("path");
-const fs = require("fs");
-const { argv } = require("yargs");
+const http = require('http');
+const path = require('path');
+const fs = require('fs');
+const { argv } = require('yargs');
 
-const Lighthouse = require("lighthouse");
-const ChromeLauncher = require("chrome-launcher");
+const Lighthouse = require('lighthouse');
+const ChromeLauncher = require('chrome-launcher');
 
-const packageJson = "package.json";
+const packageJson = 'package.json';
 
 const filterPackages = argv._.length ? argv._ : null;
 
@@ -22,7 +22,7 @@ function launchChromeAndRunLighthouse(url, flags, config) {
   return ChromeLauncher.launch({
     port: 9222,
     autoSelectChrome: true,
-    chromeFlags: ["--headless"]
+    chromeFlags: ['--headless'],
   }).then(chrome => {
     flags.port = chrome.port;
     return Lighthouse(url, flags, config).then(results =>
@@ -32,21 +32,22 @@ function launchChromeAndRunLighthouse(url, flags, config) {
 }
 
 function getPackageList() {
-  const lernaConfig = require("../../lerna.json");
+  const lernaConfig = require('../../package.json');
 
-  return lernaConfig.packages
-    .filter(pckg => pckg.indexOf("packages/benchmarks/") === 0)
+  return lernaConfig.workspaces
+    .filter(pckg => pckg.indexOf('packages/benchmarks/') === 0)
     .map(pckg => {
       // NOTE: use NODE_PATH env variable to prevent .. .. ..
-      const { benchmarks } = require(path.join(
-        "..",
-        "..",
+      const { name, benchmarks } = require(path.join(
+        '..',
+        '..',
         pckg,
-        "package.json"
+        'package.json'
       ));
 
       return Object.assign({}, benchmarks, {
-        path: path.resolve(__dirname, "..", "..", pckg)
+        module: name,
+        path: path.resolve(__dirname, '..', '..', pckg),
       });
     })
     .filter(info => {
@@ -68,7 +69,7 @@ function getAverageValue(arr) {
 }
 
 async function runTestCase(url) {
-  const config = require("lighthouse/lighthouse-core/config/perf-config");
+  const config = require('lighthouse/lighthouse-core/config/perf-config');
   const flags = { maxWaitForLoad: 60000, interactive: true };
 
   const mountDuration = [];
@@ -83,12 +84,12 @@ async function runTestCase(url) {
         flags,
         config
       );
-      if (!currentRes.lhr.audits["user-timings"].details) {
+      if (!currentRes.lhr.audits['user-timings'].details) {
         // sometimes something goes wrong with recording the trace over the page
         i--;
         continue;
       }
-      const values = currentRes.lhr.audits["user-timings"].details.items;
+      const values = currentRes.lhr.audits['user-timings'].details.items;
       const mountTime = values[0].duration;
       mountTime && mountDuration.push(mountTime);
       let curRerenderDuration = [];
@@ -111,12 +112,12 @@ async function runTestCase(url) {
   }
   return {
     mountDuration: getAverageValue(mountDuration),
-    rerenderDuration: getAverageValue(rerenderDuration)
+    rerenderDuration: getAverageValue(rerenderDuration),
   };
 }
 
 function getIcon(value) {
-  return value ? "+" : "-";
+  return value ? '+' : '-';
 }
 
 function format(value) {
@@ -124,14 +125,14 @@ function format(value) {
 }
 
 function arrayToTable(array, cols) {
-  const nextLine = "\r\n";
-  const nextCol = " | ";
+  const nextLine = '\r\n';
+  const nextCol = ' | ';
 
   let table = `## Results:${nextLine}*sorted by rerender time*${nextLine}${nextLine}`;
 
   table += cols.join(nextCol);
   table += nextLine;
-  table += cols.map(() => ":---").join(nextCol);
+  table += cols.map(() => ':---').join(nextCol);
   table += nextLine;
 
   array.forEach(item => {
@@ -141,7 +142,7 @@ function arrayToTable(array, cols) {
         getIcon(item.useCSS),
         getIcon(item.useInlineStyles),
         format(item.mountDuration),
-        format(item.rerenderDuration)
+        format(item.rerenderDuration),
       ].join(nextCol) + nextLine;
   });
 
@@ -152,27 +153,27 @@ function writeResults(res) {
   const sortRes = res.sort((a, b) => a.rerenderDuration - b.rerenderDuration);
 
   const table = arrayToTable(sortRes, [
-    "Solution",
-    "Use CSS",
-    "Use Inline-Styles",
-    "Mount Time (ms)",
-    "Rerender time (ms)"
+    'Solution',
+    'Use CSS',
+    'Use Inline-Styles',
+    'Mount Time (ms)',
+    'Rerender time (ms)',
   ]);
 
   if (!filterPackages) {
     sortRes.map(res => {
-      console.log("");
+      console.log('');
       console.log(`${chalk.green(res.name)}`);
       console.log(`  - Mount time: ${chalk.cyan(res.mountDuration)} ms`);
       console.log(`  - Renderer time: ${chalk.cyan(res.rerenderDuration)} ms`);
-      console.log("");
+      console.log('');
     });
 
-    fs.writeFileSync(__dirname + "/../../RESULT.md", table);
+    fs.writeFileSync(__dirname + '/../../RESULT.md', table);
 
-    console.log("");
-    console.log("Saved into RESULT.md");
-    console.log("");
+    console.log('');
+    console.log('Saved into RESULT.md');
+    console.log('');
   }
 }
 
@@ -185,51 +186,52 @@ async function run() {
   shell.config.verbose = true;
 
   if (!packages.length) {
-    console.log("There are no packages");
+    console.log('There are no packages');
     return;
   }
 
-  console.log("");
+  console.log('');
   if (filterPackages) {
     console.log(
-      `${chalk.green("Run benchmark")} for ${filterPackages
+      `${chalk.green('Run benchmark')} for ${filterPackages
         .map(n => chalk.cyan(n))
-        .join(", ")} packages`
+        .join(', ')} packages`
     );
     console.log(`  note that metrics will not be saved to RESULTS.md`);
   } else {
     console.log(
-      `${chalk.green("Run benchmark")}. Found ${packages.length} packages`
+      `${chalk.green('Run benchmark')}. Found ${packages.length} packages`
     );
   }
-  console.log("");
+  console.log('');
 
   for (let i = 0; i < packages.length; i++) {
     const app = connect();
     const packageInfo = packages[i];
     const currentPort = port + i;
 
-    console.log("");
+    console.log('');
     console.log(
-      `  (${i + 1}/${packages.length}) ${chalk.green(
-        packageInfo.name
-      )} at port ${currentPort}`
+      `  (${i + 1}/${packages.length}) ${chalk.green(packageInfo.name)} at port ${currentPort}`
     );
-    console.log("");
+    console.log('');
 
     if (!process.env.SKIP_BUILD) {
-      console.log(`  ${chalk.cyan("prepre package build")}`);
-      console.log("");
-      shell.exec(`npm --prefix ${packageInfo.path} run build`);
+      console.log(`  ${chalk.cyan('prepre package build')}`);
+      console.log('');
+      shell.exec(
+        `yarn lerna run --loglevel=silent --scope ${packageInfo.module} build`
+      );
+      // shell.exec(`npm --prefix ${packageInfo.path} run build`);
 
-      console.log("");
-      console.log(`  ${chalk.cyan("build completed")}`);
-      console.log("");
+      console.log('');
+      console.log(`  ${chalk.cyan('build completed')}`);
+      console.log('');
     }
 
     app.use(
-      serveStatic(path.join(packageInfo.path, "static"), {
-        index: ["index.html"]
+      serveStatic(path.join(packageInfo.path, 'static'), {
+        index: ['index.html'],
       })
     );
 
@@ -239,7 +241,7 @@ async function run() {
     console.log(`  run tests...`);
     const packageRes = await runTestCase(url);
 
-    console.log("");
+    console.log('');
     console.log(`  ${chalk.green(packageInfo.name)}:`);
     console.log(`    - Rerender Duration: ${packageRes.rerenderDuration} ms`);
     console.log(`    - Mount Duration: ${packageRes.mountDuration} ms`);
@@ -250,7 +252,7 @@ async function run() {
       useCSS: packageInfo.useCSS || false,
       link: packageInfo.link,
       rerenderDuration: packageRes.rerenderDuration,
-      mountDuration: packageRes.mountDuration
+      mountDuration: packageRes.mountDuration,
     });
 
     server.close();

@@ -1,5 +1,6 @@
 {
-  "lerna": "2.0.0-rc.4",
+  "useWorkspaces": true,
+  "npmClient": "yarn",
   "packages": [
     "packages/tests",
     "packages/benchmarks-utils",
