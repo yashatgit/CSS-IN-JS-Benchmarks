@@ -9,11 +9,13 @@
   "license": "MIT",
   "devDependencies": {
     "dev-tasks": "1.0.0",
-    "babel-plugin-styled-components": "1.10.6"
+    "babel-plugin-styled-components": "1.10.7"
   },
   "dependencies": {
     "benchmarks-utils": "1.0.0",
-    "styled-components": "^5.0.0"
+    "styled-components": "5.0.1",
+    "react": "16.12.0",
+    "react-dom": "16.12.0"
   },
   "benchmarks": {
     "name": "styled-components-decouple-cell",

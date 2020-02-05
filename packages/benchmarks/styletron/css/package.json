@@ -9,8 +9,10 @@
   "dependencies": {
     "benchmarks-utils": "1.0.0",
     "styletron-client": "3.0.4",
-    "styletron-engine-atomic": "^1.4.4",
-    "styletron-react": "5.2.6"
+    "styletron-engine-atomic": "1.4.4",
+    "styletron-react": "5.2.6",
+    "react": "16.12.0",
+    "react-dom": "16.12.0"
   },
   "devDependencies": {
     "dev-tasks": "1.0.0"
