@@ -10,7 +10,7 @@
     "packages/benchmarks/styled-components/themed",
     "packages/benchmarks/emotion/simple",
     "packages/benchmarks/emotion/css-mode",
-    "packages/benchmarks/emotion/extract-static",
+    "packages/benchmarks/emotion/theming",
     "packages/benchmarks/react",
     "packages/benchmarks/react-inline-styles",
     "packages/benchmarks/react-css",

@@ -33,6 +33,7 @@
   },
   "scripts": {
     "benchmark": "node ./packages/tests/",
+    "bootstrap": "./node_modules/.bin/lerna bootstrap --npm-client=yarn",
     "format": "find . -name '*.js' | grep -v node_modules | xargs prettier --trailing-comma es5 --single-quote --write",
     "precommit": "lint-staged"
   },

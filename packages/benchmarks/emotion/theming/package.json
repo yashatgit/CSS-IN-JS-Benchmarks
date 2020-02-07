@@ -1,26 +1,24 @@
 {
-  "name": "table-emotion-extract-static-mode-big-table",
+  "name": "emotion-theming-big-table",
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "devServer --package emotion/extract-static",
-    "build": "devBuild --package emotion/extract-static"
+    "start": "devServer --package emotion/theming",
+    "build": "devBuild --package emotion/theming"
   },
   "license": "MIT",
   "dependencies": {
-    "@arr/foreach": "^0.1.0",
-    "@arr/map": "^0.1.0",
     "benchmarks-utils": "1.0.0",
     "@emotion/core": "^10.0.0",
     "babel-plugin-emotion": "^10.0.0",
     "@emotion/styled": "^10.0.0",
-    "theming": "^1.0.1"
+    "emotion-theming": "^10.0.27"
   },
   "devDependencies": {
     "dev-tasks": "1.0.0"
   },
   "benchmarks": {
-    "name": "emotion-extract-static",
+    "name": "emotion-theming",
     "useInlineStyles": true,
     "useCSS": true,
     "link": "https://github.com/emotion-js/emotion"
